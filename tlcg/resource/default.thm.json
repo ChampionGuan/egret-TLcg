@@ -1,0 +1,37 @@
+{
+	"skins": {
+		"eui.Button": "resource/egret/skins/ButtonSkin.exml",
+		"eui.CheckBox": "resource/egret/skins/CheckBoxSkin.exml",
+		"eui.HScrollBar": "resource/egret/skins/HScrollBarSkin.exml",
+		"eui.HSlider": "resource/egret/skins/HSliderSkin.exml",
+		"eui.Panel": "resource/egret/skins/PanelSkin.exml",
+		"eui.TextInput": "resource/egret/skins/TextInputSkin.exml",
+		"eui.ProgressBar": "resource/egret/skins/ProgressBarSkin.exml",
+		"eui.RadioButton": "resource/egret/skins/RadioButtonSkin.exml",
+		"eui.Scroller": "resource/egret/skins/ScrollerSkin.exml",
+		"eui.ToggleSwitch": "resource/egret/skins/ToggleSwitchSkin.exml",
+		"eui.VScrollBar": "resource/egret/skins/VScrollBarSkin.exml",
+		"eui.VSlider": "resource/egret/skins/VSliderSkin.exml",
+		"eui.ItemRenderer": "resource/egret/skins/ItemRendererSkin.exml"
+	},
+	"autoGenerateExmlsList": true,
+	"exmls": [
+		"resource/egret/skins/ButtonSkin.exml",
+		"resource/egret/skins/CheckBoxSkin.exml",
+		"resource/egret/skins/HScrollBarSkin.exml",
+		"resource/egret/skins/HSliderSkin.exml",
+		"resource/egret/skins/ItemRendererSkin.exml",
+		"resource/egret/skins/PanelSkin.exml",
+		"resource/egret/skins/ProgressBarSkin.exml",
+		"resource/egret/skins/RadioButtonSkin.exml",
+		"resource/egret/skins/ScrollerSkin.exml",
+		"resource/egret/skins/TextInputSkin.exml",
+		"resource/egret/skins/ToggleSwitchSkin.exml",
+		"resource/egret/skins/VScrollBarSkin.exml",
+		"resource/egret/skins/VSliderSkin.exml",
+		"resource/skins/battle.exml",
+		"resource/skins/login.exml",
+		"resource/skins/popup.exml"
+	],
+	"path": "resource/default.thm.json"
+}
