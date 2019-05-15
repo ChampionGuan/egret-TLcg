@@ -46,7 +46,7 @@ namespace TLcg {
 			gameEngine.instance.addChild(this._uilayer);
 			gameEngine.instance.addChild(this._guidelayer);
 			gameEngine.instance.addChild(this._toplayer);
-			
+
 			// 打开登陆面板
 			this.openCtrl(uiCtrlName.login);
 		}

@@ -7,8 +7,6 @@ namespace TLcg {
 			return uiCtrlName.battle;
 		}
 		
-		private gesture:gesture;
-
 		private btnToLogin():void
 		{
 			uiManager.instance.openCtrl(uiCtrlName.login)
@@ -19,22 +17,10 @@ namespace TLcg {
 			uiManager.instance.openCtrl(uiCtrlName.popup)
 		}
 
-		private initGestrue():void
-		{
-			if(null != this.gesture)
-			{
-				return;
-			}
-			this.gesture = new gesture();
-			this.gesture.Initialize(RES.getRes("gesture_json"));
-		}
-
 		protected onCreat():void
 		{
 			this.view.m_btnLogin.addEventListener(egret.TouchEvent.TOUCH_TAP,this.btnToLogin,this);
 			this.view.m_btnPopup.addEventListener(egret.TouchEvent.TOUCH_TAP,this.btnToPopup,this);
-
-			this.initGestrue();
 		}
 
 		protected onDestroy():void
@@ -47,11 +33,11 @@ namespace TLcg {
 		{
 			if(value)
 			{
-				this.gesture.Start(this.view.m_gestureShape,this.view.m_gestureGroup);
+				battleEngine.instance.start(this.view.m_gestureGroup,(id)=>{});
 			}
 			else
 			{
-				this.gesture.End();
+				battleEngine.instance.over();
 			}
 		}
 	}

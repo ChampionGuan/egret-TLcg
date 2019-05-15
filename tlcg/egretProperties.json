@@ -21,5 +21,12 @@
     {
       "name": "promise"
     }
-  ]
+  ],
+  "targets": {
+    "ios": {
+      "appname": "demo",
+      "packagename": "com.zn.champion",
+      "hybrid": false
+    }
+  }
 }

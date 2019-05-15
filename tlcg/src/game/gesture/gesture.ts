@@ -3,14 +3,18 @@ namespace TLcg {
     {
         private config:Array<any>;
         private gestureDirIdStr:string;
-        private gestureTypeId:number;
+        private gestureId:number;
+        private gestureIdConfig:any;
         private pointsIdle:pointPool;
+        private shapesIdle:shapePool;
+        private isMouseDown:boolean = false;
+        private touchsInfo:egret.Point[]
+        private touchsInfo2:egret.Point[]
 
         private lineShape:egret.Shape = null;
         private lineGroup:eui.Group = null;
-        private isMouseDown:boolean = false;
-        private touchsInfo:egret.Point[]
-        
+        private gestureCallback:Function = null;
+
         private static _instance:gesture;
         public static get instance() : gesture {
             if(null == gesture._instance)
@@ -22,21 +26,26 @@ namespace TLcg {
         
         public Initialize(config:Array<any>):void
         {
-            if (null == config)
+            if(null == config)
             {
                 return;
             }
-            if (null == this.pointsIdle)
+            if(null == this.pointsIdle)
             {
                 this.pointsIdle = new pointPool();
+            }
+            if(null == this.shapesIdle)
+            {
+                this.shapesIdle = new shapePool();
             }
             this.config = config;
         }
 
-        public Start(value:egret.Shape,group:eui.Group):void
+        public Start(group:eui.Group,func:Function):void
         {
-            this.lineShape = value;
             this.lineGroup = group;
+            this.lineShape = this.shapesIdle.get(group);
+            this.gestureCallback = func;
             this.isMouseDown = false;
             this.lineGroup.addEventListener(egret.TouchEvent.TOUCH_BEGIN,this.mouseDown,this);
             this.lineGroup.addEventListener(egret.TouchEvent.TOUCH_MOVE,this.mouseMove,this);
@@ -50,6 +59,7 @@ namespace TLcg {
             this.lineGroup.removeEventListener(egret.TouchEvent.TOUCH_MOVE,this.mouseMove,this);
             this.lineGroup.removeEventListener(egret.TouchEvent.TOUCH_END,this.mouseUp,this);
             this.lineGroup.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE,this.mouseUp,this);
+            this.shapesIdle.back(this.lineShape);
             this.lineShape = null;
             this.lineGroup = null;
         }
@@ -62,11 +72,15 @@ namespace TLcg {
             }
             this.isMouseDown = true;
             this.lineShape.graphics.clear();
+            this.lineShape.graphics.lineStyle(8,0xFFFFFF);
             this.touchsInfo = [];
+            this.touchsInfo2 = [];
 
-            let point = this.pointsIdle.get(value.stageX,value.stageY);
-            this.touchsInfo.push(point);
-            this.lineShape.graphics.moveTo(point.x,point.y);
+            let point1 = this.pointsIdle.get(value.stageX,value.stageY);
+            let point2 = this.pointsIdle.get(value.stageX,value.stageY);
+            this.touchsInfo.push(point1);
+            this.touchsInfo2.push(point2);
+            this.lineShape.graphics.moveTo(point1.x,point1.y);
         }
         private mouseMove(value:egret.TouchEvent):void
         {
@@ -74,12 +88,11 @@ namespace TLcg {
             {
                 return;
             }
-            let point = this.pointsIdle.get(value.stageX,value.stageY);
-            this.touchsInfo.push(point);
-            this.lineShape.graphics.lineStyle(8,0xFFFFFF);
-            this.lineShape.graphics.lineTo(point.x,point.y);
-            this.lineShape.graphics.endFill();
-            
+            let point1 = this.pointsIdle.get(value.stageX,value.stageY);
+            let point2 = this.pointsIdle.get(value.stageX,value.stageY);
+            this.touchsInfo.push(point1);
+            this.touchsInfo2.push(point2);
+            this.lineShape.graphics.lineTo(point1.x,point1.y);
         }
         private mouseUp(value:egret.TouchEvent):void
         {
@@ -87,8 +100,10 @@ namespace TLcg {
             {
                 return;
             }
-            let point = this.pointsIdle.get(value.stageX,value.stageY);
-            this.touchsInfo.push(point);
+            let point1 = this.pointsIdle.get(value.stageX,value.stageY);
+            let point2 = this.pointsIdle.get(value.stageX,value.stageY);
+            this.touchsInfo.push(point1);
+            this.touchsInfo2.push(point2);
             this.lineShape.graphics.clear();
             this.isMouseDown = false;
 
@@ -99,7 +114,8 @@ namespace TLcg {
         {
             this.distanceCheck();  
             this.directionCheck();
-            this.getstureIdCheck();
+            this.gestureIdCheck();
+            this.gestrueTailing();
         }
         private distanceCheck():void
         {
@@ -153,9 +169,10 @@ namespace TLcg {
             this.gestureDirIdStr = dirIdStr;
             console.log("手势编码串：" + this.gestureDirIdStr);
         }
-        private getstureIdCheck():void
+        private gestureIdCheck():void
         {
-            var maxType:number = -1;
+            this.gestureId = -1;
+            this.gestureIdConfig = null;
             var max:number = -1;
             var len:number = this.config.length;
             let len1:number;
@@ -168,18 +185,51 @@ namespace TLcg {
                     if(val>max)
                     {
                         max = val;
-                        maxType = this.config[i].type;
+                        this.gestureIdConfig = this.config[i];
+                        this.gestureId = this.config[i].id;
                     }
                 }
             }
 
             if(max<0.4)
             {
-                
-                maxType = -1;
+                this.gestureId = -1;
+                this.gestureIdConfig = null;
             }
-            this.gestureTypeId = maxType;
-            console.log("手势类型id：" + this.gestureTypeId);
+            console.log("手势类型id：" + this.gestureId);
+            if (this.gestureId == -1)
+            {
+                return;
+            }            
+            if (null != this.gestureCallback)
+            {
+                this.gestureCallback(this.gestureId)
+            }
+        }
+        private gestrueTailing():void
+        {
+            let shape:egret.Shape;
+            if (null != this.gestureIdConfig)
+            {
+                shape = this.shapesIdle.get(this.lineGroup);
+                shape.graphics.lineStyle(8, this.gestureIdConfig.color);
+                shape.graphics.moveTo(this.touchsInfo2[0].x,this.touchsInfo2[0].y)
+                this.pointsIdle.back(this.touchsInfo2[0])
+            }
+            for(let i:number = 1;i<this.touchsInfo2.length;i++)
+            {
+                if (null != shape)
+                {
+                    shape.graphics.lineTo(this.touchsInfo2[i].x, this.touchsInfo2[i].y);
+                }
+                this.pointsIdle.back(this.touchsInfo2[i])
+            }
+            if (null != shape)
+            {
+                timerManager.instance.newTimer(0.5,1,false,null,null,()=>{
+                    this.shapesIdle.back(shape);
+                });
+            }      
         }
         /*
         计算两点关系所形成的象限
@@ -369,6 +419,33 @@ namespace TLcg {
                 return;
             }
             this.points.push(p);
+        }
+    }
+    export class shapePool
+    {
+        private shapes:Array<egret.Shape> = new Array<egret.Shape>();
+
+        public get(parent:eui.Group):egret.Shape
+        {
+            let p = this.shapes.pop();
+            if (null == p)
+            {
+                p = new egret.Shape();
+            }
+            if (null != parent)
+            {
+                parent.addChild(p);
+            }
+            return p;
+        }
+        public back(p:egret.Shape)
+        {
+            if (null == p)
+            {
+                return;
+            }
+            p.graphics.clear();
+            this.shapes.push(p);
         }
     }
 }

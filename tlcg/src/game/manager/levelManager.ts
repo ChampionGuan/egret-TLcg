@@ -14,7 +14,6 @@ namespace TLcg {
 
 	public initialize():void
 	{
-		
 	}
 
 	public update():void
