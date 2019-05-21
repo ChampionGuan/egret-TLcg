@@ -1,30 +1,26 @@
 namespace TLcg {
 	export class uiCtrlBase {
-		private _center:uiCenterBase;
+		private _center: uiCenterBase;
 
-		public view:uiViewBase;
-		protected data:any;
-		
-		private _isOpen:boolean = false;
-		public get isOpen():boolean
-		{
+		public view: uiViewBase;
+		protected data: any;
+
+		private _isOpen: boolean = false;
+		public get isOpen(): boolean {
 			return this._isOpen;
 		}
 
-		public get isPopupBox():boolean
-		{
+		public get isPopupBox(): boolean {
 			return false;
 		}
 
-		public get ctrlName():string
-		{
+		public get ctrlName(): string {
 			return "";
 		}
 
-		public creat(center:uiCenterBase):void
-		{
+		public creat(center: uiCenterBase): void {
 			this._center = center;
-			this.view = null == this.view ? this._center.getView(this.ctrlName):this.view;
+			this.view = null == this.view ? this._center.getView(this.ctrlName) : this.view;
 			this.view.creat();
 
 			this._center.addCtrl(this);
@@ -32,107 +28,88 @@ namespace TLcg {
 
 			this.onCreat();
 		}
-		
-		public open(data:any):void
-		{
+
+		public open(data: any): void {
 			this.data = data;
 			this._isOpen = true
 			this.onOpen();
 			this._center.enqueue(this);
 		}
 
-		public close():void
-		{
+		public close(): void {
 			this._center.dequeue(this);
 			this.onClose();
 			this._isOpen = false;
 		}
 
-		public show():void
-		{
+		public show(): void {
 			this.onShow();
 			this.setInteractive(true);
 			this.view.show(true);
 		}
-		
-		public hide():void
-		{
+
+		public hide(): void {
 			this.view.show(false);
 			this.setInteractive(false);
 			this.onHide();
 		}
 
-		public setInteractive(value:boolean):void
-		{
+		public setInteractive(value: boolean): void {
 			this.view.setInteractive(value);
 			this.onInteractive(value);
 		}
 
-		public destroy():void
-		{
+		public destroy(): void {
 			this._center.removeCtrl(this.ctrlName);
 			this._center.removeCtrl(this.ctrlName);
-			
+
 			this.onDestroy();
 			this.view.destroy();
 		}
 
-		public ntfMsg(value:string,data:any):void
-		{
-			if(!this.isOpen)
-			{
+		public ntfMsg(value: string, data: any): void {
+			if (!this.isOpen) {
 				return;
 			}
-			this.onNtfMsg(value,data);
+			this.onNtfMsg(value, data);
 		}
 
-		public update():void
-		{
-			if(!this.isOpen)
-			{
+		public update(): void {
+			if (!this.isOpen) {
 				return;
 			}
 			this.onUpdate();
 		}
-		
-		protected onCreat():void
-		{
+
+		protected onCreat(): void {
 
 		}
-		protected onDestroy():void
-		{
-			
-		}
-
-		protected onOpen():void
-		{
-
-		}
-		protected onClose():void
-		{
+		protected onDestroy(): void {
 
 		}
 
-		protected onShow():void
-		{
+		protected onOpen(): void {
 
 		}
-		protected onHide():void
-		{
-			
-		}
-
-		protected onInteractive(value:boolean):void
-		{
+		protected onClose(): void {
 
 		}
 
-		protected onUpdate():void
-		{
+		protected onShow(): void {
 
 		}
-		protected onNtfMsg(value:string,data:any):void
-		{
+		protected onHide(): void {
+
+		}
+
+		protected onInteractive(value: boolean): void {
+
+		}
+
+		protected onUpdate(): void {
+
+		}
+		protected onNtfMsg(value: string, data: any): void {
 
 		}
 	}

@@ -1,11 +1,10 @@
- namespace TLcg {
+namespace TLcg {
 	export class loginView extends uiViewBase {
-		public m_start:eui.Button;
+		public m_start: eui.Button;
 
-		public constructor()
-		{
+		public constructor() {
 			super();
 			this.skinName = uiSkipName.login
 		}
 	}
- }
+}

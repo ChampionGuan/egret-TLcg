@@ -1,21 +1,20 @@
 namespace TLcg {
 
-    export interface Ibase
-    {
-        update():void;
-        destroy():void;
-        appFocus(focus:boolean):void;
+    export interface Ibase {
+        update(): void;
+        destroy(): void;
+        appFocus(focus: boolean): void;
     }
 
     // 单例
     export class singleton<T> {
         private static _instance: any = null;
-        public static getInstance<T>(type: { new(): T}){
+        public static getInstance<T>(type: { new (): T }) {
             if (this._instance === null) {
                 this._instance = new type();
             }
             return this._instance;
-        } 
+        }
     }
 
     // 队列
@@ -64,41 +63,41 @@ namespace TLcg {
 
     // 栈
     export class Stack<T> {
-            
-        private elements:Array<T>;
-        private _size:number;
-        
-        public constructor(capacity:number = 10){
+
+        private elements: Array<T>;
+        private _size: number;
+
+        public constructor(capacity: number = 10) {
             this.elements = new Array<T>(capacity);
             this._size = 0;
         }
 
-        public push(o:T){
+        public push(o: T) {
             var len = this.elements.length;
-            if(this._size >= len){
+            if (this._size >= len) {
                 let temp = new Array<T>(len);
-                this.elements=this.elements.concat(temp);
+                this.elements = this.elements.concat(temp);
             }
-            this.elements[this._size++]=o;
+            this.elements[this._size++] = o;
         }
 
-        public pop():T{
+        public pop(): T {
             return this.elements[--this._size];
         }
 
-        public peek():T{
-            return this.elements[this._size-1];
+        public peek(): T {
+            return this.elements[this._size - 1];
         }
 
-        public size():number{
+        public size(): number {
             return this._size;
         }
-        
-        public empty():boolean{
-            return this._size==0;
+
+        public empty(): boolean {
+            return this._size == 0;
         }
 
-        public clear(capacity:number = 10){
+        public clear(capacity: number = 10) {
             delete this.elements;
             this.elements = new Array(capacity);
             this._size = 0;
@@ -107,104 +106,96 @@ namespace TLcg {
 
     // 集合
     export class List<T> {
-        private elements:Array<T> = [];
+        private elements: Array<T> = [];
         private _size: number;
 
-        public constructor(capacity:number = 10){
+        public constructor(capacity: number = 10) {
             this.elements = new Array<T>(capacity);
             this._size = 0;
         }
 
-        public get(v:number):T
-        {
+        public get(v: number): T {
             return this.elements[v];
         }
 
-        public add(o:T){
+        public add(o: T) {
             var len = this.elements.length;
-            if(this._size >= len){
+            if (this._size >= len) {
                 let temp = new Array<T>(len);
-                this.elements=this.elements.concat(temp);
+                this.elements = this.elements.concat(temp);
             }
-            this.elements[this._size++]=o;
+            this.elements[this._size++] = o;
         }
 
-        public remove(o:T){
-            let index:number = this.indexOf(o);
-            if(index < 0){
+        public remove(o: T) {
+            let index: number = this.indexOf(o);
+            if (index < 0) {
                 return
             }
             delete this.elements[index];
-            for(let i:number = index ;i<this._size;i++)
-            {
-                if(this.elements[i+1])
-                {
-                    this.elements[i] = this.elements[i+1]
+            for (let i: number = index; i < this._size; i++) {
+                if (this.elements[i + 1]) {
+                    this.elements[i] = this.elements[i + 1]
                 }
             }
             this._size--;
         }
 
-        public indexOf(o:T):number{
+        public indexOf(o: T): number {
             return this.elements.indexOf(o);
         }
 
-        public size():number{
+        public size(): number {
             return this._size;
         }
 
-        public empty():boolean{
-            return this._size==0;
+        public empty(): boolean {
+            return this._size == 0;
         }
 
-        public clear(){
+        public clear() {
             delete this.elements;
             this.elements = new Array<T>();;
             this._size = 0;
         }
     }
 
-    export class Bezier
-    {
-        private s:egret.Point;
-        private e:egret.Point;
-        private m:egret.Point;
-        private r:egret.Point;
-        private dis:number;
+    export class Bezier {
+        private s: egret.Point;
+        private e: egret.Point;
+        private m: egret.Point;
+        private r: egret.Point;
+        private dis: number;
 
-        private clear():void
-        {
+        private clear(): void {
             this.dis = 0;
-            this.s.setTo(0,0);
-            this.e.setTo(0,0);
-            this.m.setTo(0,0);
-            this.r.setTo(0,0);
+            this.s.setTo(0, 0);
+            this.e.setTo(0, 0);
+            this.m.setTo(0, 0);
+            this.r.setTo(0, 0);
         }
-        public setBezierPoints(s:egret.Point,e:egret.Point,factor:number):void
-        {
+        public setBezierPoints(s: egret.Point, e: egret.Point, factor: number): void {
             this.clear();
 
-            this.dis = egret.Point.distance(s,e);
+            this.dis = egret.Point.distance(s, e);
             this.s = s;
             this.e = e;
-            this.m.setTo(0.5*(s.x+e.x),0.5*(s.y+e.y) + this.dis*factor);
+            this.m.setTo(0.5 * (s.x + e.x), 0.5 * (s.y + e.y) + this.dis * factor);
         }
-        public setLinePoints(s:egret.Point,e:egret.Point)
-        {
+        public setLinePoints(s: egret.Point, e: egret.Point) {
             this.clear();
 
             this.dis = 0;
             this.s = s;
             this.e = e;
-            this.m.setTo(0.5*(s.x + e.x),0.5*(s.y+e.y))
+            this.m.setTo(0.5 * (s.x + e.x), 0.5 * (s.y + e.y))
         }
-        public getPointAtTime(v:number)
-        {
-            v = v > 1? 1:v;
-            v = v < 0? 0:v;
+        public getPointAtTime(v: number) {
+            v = v > 1 ? 1 : v;
+            v = v < 0 ? 0 : v;
 
-            this.r.x = v * v * (this.e.x - 2*this.m.x + this.s.x) + this.s.x + 2 * v * (this.m.x - this.s.x);
-            this.r.y = v * v * (this.e.y - 2*this.m.y + this.s.y) + this.s.y + 2 * v * (this.m.y - this.s.y);
+            this.r.x = v * v * (this.e.x - 2 * this.m.x + this.s.x) + this.s.x + 2 * v * (this.m.x - this.s.x);
+            this.r.y = v * v * (this.e.y - 2 * this.m.y + this.s.y) + this.s.y + 2 * v * (this.m.y - this.s.y);
 
             return this.r;
         }

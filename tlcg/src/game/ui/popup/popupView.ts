@@ -1,11 +1,10 @@
- namespace TLcg {
+namespace TLcg {
 	export class popupView extends uiViewBase {
-		public m_back:eui.Button;
+		public m_back: eui.Button;
 
-		public constructor()
-		{
+		public constructor() {
 			super();
 			this.skinName = uiSkipName.popup
 		}
 	}
- }
+}
